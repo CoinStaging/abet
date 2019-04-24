@@ -184,7 +184,7 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-void OverviewPage::getPercentage(CAmount nUnlockedBalance) //, CAmount nZerocoinBalance, QString& sABETPercentage, QString& szABETPercentage)
+/*void OverviewPage::getPercentage(CAmount nUnlockedBalance, QString& sABETPercentage) //, CAmount nZerocoinBalance, QString& sABETPercentage, QString& szABETPercentage)
 {
     int nPrecision = 2;
     double dzPercentage = 0.0;
@@ -207,7 +207,7 @@ void OverviewPage::getPercentage(CAmount nUnlockedBalance) //, CAmount nZerocoin
     //szABETPercentage = "(" + QLocale(QLocale::system()).toString(dzPercentage, 'f', nPrecision) + " %)";
     sABETPercentage = "(" + QLocale(QLocale::system()).toString(dPercentage, 'f', nPrecision) + " %)";
     
-}
+}*/
 
 void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, 
                               //const CAmount& zerocoinBalance, const CAmount& unconfirmedZerocoinBalance, const CAmount& immatureZerocoinBalance,
@@ -238,8 +238,8 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     //CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
     // Percentages
     //QString szPercentage = "";
-    QString sPercentage = "";
-	getPercentage(nUnlockedBalance, sPercentage); //zerocoinBalance, sPercentage, szPercentage);
+    //QString sPercentage = "";
+	//getPercentage(nUnlockedBalance, sPercentage); //zerocoinBalance, sPercentage, szPercentage);
     // Combined balances
 	CAmount availableTotalBalance = abetAvailableBalance; //+ matureZerocoinBalance;
 	CAmount sumTotalBalance = nTotalBalance; //+ zerocoinBalance;
@@ -269,7 +269,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     ui->labelTotalz->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, sumTotalBalance, false, BitcoinUnits::separatorAlways));
 
     // Percentage labels
-    ui->labelABETPercent->setText(sPercentage);
+    //ui->labelABETPercent->setText(sPercentage);
     //ui->labelzABETPercent->setText(szPercentage);
 
     // Adjust bubble-help according to AutoMint settings
@@ -299,6 +299,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     bool showImmature = settingShowAllBalances || immatureBalance != 0;
     bool showWatchOnlyImmature = watchImmatureBalance != 0;
     bool showWatchOnly = nTotalWatchBalance != 0;
+
     ui->labelBalance->setVisible(showABETAvailable || showWatchOnlyABETAvailable);
     ui->labelBalanceText->setVisible(showABETAvailable || showWatchOnlyABETAvailable);
     ui->labelWatchAvailable->setVisible(showABETAvailable && showWatchOnly);
@@ -314,14 +315,14 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 	bool showzABETAvailable = settingShowAllBalances; //|| zerocoinBalance != matureZerocoinBalance;
 	bool showzABETUnconfirmed = settingShowAllBalances; //|| unconfirmedZerocoinBalance != 0;
 	bool showzABETImmature = settingShowAllBalances; //|| immatureZerocoinBalance != 0;
-    ui->labelzBalanceMature->setVisible(showzABETAvailable);
-    ui->labelzBalanceMatureText->setVisible(showzABETAvailable);
-    ui->labelzBalanceUnconfirmed->setVisible(showzABETUnconfirmed);
-    ui->labelzBalanceUnconfirmedText->setVisible(showzABETUnconfirmed);
-    ui->labelzBalanceImmature->setVisible(showzABETImmature);
-    ui->labelzBalanceImmatureText->setVisible(showzABETImmature);
-    bool showPercentages = ! (nTotalBalance == 0); //(zerocoinBalance == 0 && nTotalBalance == 0);
-    ui->labelABETPercent->setVisible(showPercentages);
+    //ui->labelzBalanceMature->setVisible(showzABETAvailable);
+    //ui->labelzBalanceMatureText->setVisible(showzABETAvailable);
+    //ui->labelzBalanceUnconfirmed->setVisible(showzABETUnconfirmed);
+    //ui->labelzBalanceUnconfirmedText->setVisible(showzABETUnconfirmed);
+    //ui->labelzBalanceImmature->setVisible(showzABETImmature);
+    //ui->labelzBalanceImmatureText->setVisible(showzABETImmature);
+    //bool showPercentages = ! (nTotalBalance == 0); //(zerocoinBalance == 0 && nTotalBalance == 0);
+    //ui->labelABETPercent->setVisible(showPercentages);
     //ui->labelzABETPercent->setVisible(showPercentages);
 
     static int cachedTxLocks = 0;
