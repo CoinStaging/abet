@@ -21,6 +21,11 @@
 #include "transactionrecord.h"
 #include "transactiontablemodel.h"
 #include "walletmodel.h"
+#include "masternodeman.h"
+#include "walletmodel.h"
+#include "rpcblockchain.cpp"
+#include "chainparams.h"
+#include "chainparams.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -63,7 +68,8 @@ public:
         int halfheight = (mainRect.height() - 2 * ypad) / 2;
         QRect amountRect(mainRect.left() + xspace, mainRect.top() + ypad, mainRect.width() - xspace - ICON_OFFSET, halfheight);
         QRect addressRect(mainRect.left() + xspace, mainRect.top() + ypad + halfheight, mainRect.width() - xspace, halfheight);
-        icon.paint(painter, decorationRect); 
+        icon.paint(painter, decorationRect);
+
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
         QString address = index.data(Qt::DisplayRole).toString();
         qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
@@ -144,6 +150,14 @@ OverviewPage::OverviewPage(QWidget* parent) : QWidget(parent),
     nDisplayUnit = 0; // just make sure it's not unitialized
     ui->setupUi(this);
 
+	/*
+	ui->pushButton_Website->setIcon(QIcon(":/icons/website"));
+	ui->pushButton_Discord->setIcon(QIcon(":/icons/discord"));
+	ui->pushButton_Github->setIcon(QIcon(":/icons/github"));
+	ui->pushButton_Twitter->setIcon(QIcon(":/icons/twitter"));
+	ui->pushButton_Explorer->setIcon(QIcon(":/icons/explorer"));
+	*/
+
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
@@ -162,12 +176,18 @@ OverviewPage::OverviewPage(QWidget* parent) : QWidget(parent),
 	// Exchange API
 	QTimer* webtimer = new QTimer();
     webtimer->setInterval(30000);
-
     QObject::connect(webtimer, SIGNAL(timeout()), this, SLOT(timerTickSlot()));
-
     webtimer->start();
-
     emit timerTickSlot();
+
+	//Masternode Information
+    timerinfo_mn = new QTimer(this);
+    connect(timerinfo_mn, SIGNAL(timeout()), this, SLOT(updateMasternodeInfo()));
+    timerinfo_mn->start(1000);
+
+    timerinfo_blockchain = new QTimer(this);
+    connect(timerinfo_blockchain, SIGNAL(timeout()), this, SLOT(updatBlockChainInfo()));
+    timerinfo_blockchain->start(1000); //30sec
 }
 
 void OverviewPage::handleTransactionClicked(const QModelIndex& index)
@@ -379,6 +399,94 @@ void OverviewPage::updateDisplayUnit()
     }
 }
 
+// All credit goes to the ESB team for developing the core of this. https://github.com/BlockchainFor/ESBC2
+// TFinch has edited it to work with Altbet
+void OverviewPage::updateMasternodeInfo()
+{
+    if (masternodeSync.IsBlockchainSynced() && masternodeSync.IsSynced()) {
+        int mn1 = 0;
+        int mn2 = 0;
+        int mn3 = 0;
+        int mn4 = 0;
+        int totalmn = 0;
+        std::vector<CMasternode> vMasternodes = mnodeman.GetFullMasternodeVector();
+        for (auto& mn : vMasternodes) {
+            switch (mn.nActiveState = true) {
+            case 1:
+                mn1++;
+                break;
+            case 2:
+                mn2++;
+                break;
+            case 3:
+                mn3++;
+                break;
+            case 4:
+                mn4++;
+                break;
+            }
+        }
+        totalmn = mn1 + mn2 + mn3 + mn4;
+        ui->labelMnTotal_Value->setText(QString::number(totalmn));
+        //ui->graphMN->setMaximum(totalmn);
+        //ui->graphMN->setValue(mn1);
+
+
+        // TODO: need a read actual 24h blockcount from chain
+        int BlockCount24h = block24hCount > 0 ? block24hCount : 1440;
+
+        // Update ROI
+        double BlockReward = GetBlockValue(chainActive.Height());
+        double roi1 = (0.90 * BlockReward * BlockCount24h) / mn1 / COIN;
+
+        if (chainActive.Height() <= 270000 && chainActive.Height() > 280000) { //90%
+            ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  ABET"));
+            ui->roi_1->setText(mn1 == 0 ? " " : QString::number(1000 / roi1, 'f', 1).append(" days"));
+
+        } else if (chainActive.Height() > 280000) { //90%
+            ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi2, 'f', 0).append("  ABET"));
+            ui->roi_1->setText(mn1 == 0 ? " " : QString::number(5000 / roi1, 'f', 1).append(" days"));
+        }
+
+		CAmount tNodesSumm = mn1 * 5000;
+        CAmount tMoneySupply = chainActive.Tip()->nMoneySupply;
+        double tLocked = tMoneySupply > 0 ? 100 * static_cast<double>(tNodesSumm) / static_cast<double>(tMoneySupply / COIN) : 0;
+        ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
+
+        // Update Timer
+        if (timerinfo_mn->interval() == 1000)
+            timerinfo_mn->setInterval(10000);
+    }
+
+    // Update Collateral Info
+    if (chainActive.Height() >= 0) {
+        ui->label_lcolat->setText("1000 ABET");
+        ui->label_mcolat->setText("5000 ABET");
+    }
+}
+
+//All credit goes to the ESB team for developing this. https://github.com/BlockchainFor/ESBC2
+void OverviewPage::updatBlockChainInfo()
+{
+    if (masternodeSync.IsBlockchainSynced()) {
+        int CurrentBlock = (int)chainActive.Height();
+        int64_t netHashRate = chainActive.GetNetworkHashPS(24, CurrentBlock - 1);
+        double BlockReward = GetBlockValue(chainActive.Height());
+        double BlockRewardabetcoin = static_cast<double>(BlockReward / COIN);
+        double CurrentDiff = GetDifficulty();
+
+        ui->label_CurrentBlock_value->setText(QString::number(CurrentBlock));
+        ui->label_Nethash->setText(tr("Difficulty:"));
+        ui->label_Nethash_value->setText(QString::number(CurrentDiff, 'f', 4));
+        ui->label_CurrentBlockReward_value->setText(QString::number(BlockRewardabetcoin, 'f', 1));
+        ui->label_Supply_value->setText(QString::number(chainActive.Tip()->nMoneySupply / COIN).append(" ABET"));
+		ui->label_24hBlock_value->setText(QString::number(block24hCount));
+        ui->label_24hPoS_value->setText(QString::number(static_cast<double>(posMin) / COIN, 'f', 1).append(" | ") + QString::number(static_cast<double>(posMax) / COIN, 'f', 1));
+        ui->label_24hPoSMedian_value->setText(QString::number(static_cast<double>(posMedian) / COIN, 'f', 1));
+    }
+}
+
+
 void OverviewPage::updateAlerts(const QString& warnings)
 {
     this->ui->labelAlerts->setVisible(!warnings.isEmpty());
@@ -390,3 +498,38 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
     ui->labelWalletStatus->setVisible(fShow);
     ui->labelTransactionsStatus->setVisible(fShow);
 }
+
+/*
+void OverviewPage::on_pushButton_Website_clicked()
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+void OverviewPage::on_pushButton_Discord_clicked()
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+void OverviewPage::on_pushButton_Telegram_clicked()
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+void OverviewPage::on_pushButton_Twitter_clicked()
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+void OverviewPage::on_pushButton_Reddit_clicked()
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+void OverviewPage::on_pushButton_Medium_clicked()
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+void OverviewPage::on_pushButton_Facebook_clicked() 
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+void OverviewPage::on_pushButton_Explorer_clicked()
+{
+    QDesktopServices::openUrl(QUrl("", QUrl::TolerantMode));
+}
+*/
