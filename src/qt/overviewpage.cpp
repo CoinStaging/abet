@@ -135,9 +135,6 @@ OverviewPage::OverviewPage(QWidget* parent) : QWidget(parent),
                                               currentBalance(-1),
                                               currentUnconfirmedBalance(-1),
                                               currentImmatureBalance(-1),
-                                              //currentZerocoinBalance(-1),
-                                              //currentUnconfirmedZerocoinBalance(-1),
-                                              //currentimmatureZerocoinBalance(-1),
                                               currentWatchOnlyBalance(-1),
                                               currentWatchUnconfBalance(-1),
                                               currentWatchImmatureBalance(-1),
@@ -184,41 +181,12 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-/*void OverviewPage::getPercentage(CAmount nUnlockedBalance, QString& sABETPercentage) //, CAmount nZerocoinBalance, QString& sABETPercentage, QString& szABETPercentage)
-{
-    int nPrecision = 2;
-    double dzPercentage = 0.0;
-
-	
-    //if (nZerocoinBalance <= 0){
-    //    dzPercentage = 0.0;
-    //}
-    //else{
-        if (nUnlockedBalance <= 0){
-            dzPercentage = 100.0;
-        }
-        else{
-			dzPercentage = 100.0 * (nUnlockedBalance); //(double)(nZerocoinBalance / (double)(nZerocoinBalance + nUnlockedBalance));
-        }
-    //}
-
-    double dPercentage = 100.0 - dzPercentage;
-    
-    //szABETPercentage = "(" + QLocale(QLocale::system()).toString(dzPercentage, 'f', nPrecision) + " %)";
-    sABETPercentage = "(" + QLocale(QLocale::system()).toString(dPercentage, 'f', nPrecision) + " %)";
-    
-}*/
-
-void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, 
-                              //const CAmount& zerocoinBalance, const CAmount& unconfirmedZerocoinBalance, const CAmount& immatureZerocoinBalance,
+void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                               const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
     currentBalance = balance;
     currentUnconfirmedBalance = unconfirmedBalance;
     currentImmatureBalance = immatureBalance;
-    //currentZerocoinBalance = zerocoinBalance;
-    //currentUnconfirmedZerocoinBalance = unconfirmedZerocoinBalance;
-    //currentimmatureZerocoinBalance = immatureZerocoinBalance;
     currentWatchOnlyBalance = watchOnlyBalance;
     currentWatchUnconfBalance = watchUnconfBalance;
     currentWatchImmatureBalance = watchImmatureBalance;
@@ -229,20 +197,16 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
         nLockedBalance = pwalletMain->GetLockedCoins();
         nWatchOnlyLockedBalance = pwalletMain->GetLockedWatchOnlyBalance();
     }
+
     // ABET Balance
     CAmount nTotalBalance = balance + unconfirmedBalance;
     CAmount abetAvailableBalance = balance - immatureBalance - nLockedBalance;
     CAmount nTotalWatchBalance = watchOnlyBalance + watchUnconfBalance + watchImmatureBalance;    
     CAmount nUnlockedBalance = nTotalBalance - nLockedBalance;
-    // zABET Balance
-    //CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
-    // Percentages
-    //QString szPercentage = "";
-    //QString sPercentage = "";
-	//getPercentage(nUnlockedBalance, sPercentage); //zerocoinBalance, sPercentage, szPercentage);
+
     // Combined balances
-	CAmount availableTotalBalance = abetAvailableBalance; //+ matureZerocoinBalance;
-	CAmount sumTotalBalance = nTotalBalance; //+ zerocoinBalance;
+	CAmount availableTotalBalance = abetAvailableBalance;
+	CAmount sumTotalBalance = nTotalBalance;
 
     // ABET labels
     ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, abetAvailableBalance, false, BitcoinUnits::separatorAlways));
@@ -258,19 +222,9 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     ui->labelWatchLocked->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, nWatchOnlyLockedBalance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchTotal->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, nTotalWatchBalance, false, BitcoinUnits::separatorAlways));
 
-    // zABET labels
-    //ui->labelzBalance->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, zerocoinBalance, false, BitcoinUnits::separatorAlways));
-    //ui->labelzBalanceUnconfirmed->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, unconfirmedZerocoinBalance, false, BitcoinUnits::separatorAlways));
-    //ui->labelzBalanceMature->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, matureZerocoinBalance, false, BitcoinUnits::separatorAlways));
-    //ui->labelzBalanceImmature->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, immatureZerocoinBalance, false, BitcoinUnits::separatorAlways));
-
     // Combined labels
     ui->labelBalancez->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, availableTotalBalance, false, BitcoinUnits::separatorAlways));
     ui->labelTotalz->setText(BitcoinUnits::floorHtmlWithUnitComma(nDisplayUnit, sumTotalBalance, false, BitcoinUnits::separatorAlways));
-
-    // Percentage labels
-    //ui->labelABETPercent->setText(sPercentage);
-    //ui->labelzABETPercent->setText(szPercentage);
 
     // Adjust bubble-help according to AutoMint settings
     QString automintHelp = tr("Current percentage of zABET.\nIf AutoMint is enabled this percentage will settle around the configured AutoMint percentage (default = 10%).\n");
@@ -289,7 +243,6 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     bool settingShowAllBalances = !settings.value("fHideZeroBalances").toBool();
     bool showSumAvailable = settingShowAllBalances || sumTotalBalance != availableTotalBalance;
     ui->labelBalanceTextz->setVisible(showSumAvailable);
-    //ui->labelBalancez->setVisible(showSumAvailable);
     bool showABETAvailable = settingShowAllBalances || abetAvailableBalance != nTotalBalance;
     bool showWatchOnlyABETAvailable = watchOnlyBalance != nTotalWatchBalance;
     bool showABETPending = settingShowAllBalances || unconfirmedBalance != 0;
@@ -311,19 +264,10 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     ui->labelWatchLocked->setVisible(showABETLocked && showWatchOnly);
     ui->labelImmature->setVisible(showImmature || showWatchOnlyImmature); // for symmetry reasons also show immature label when the watch-only one is shown
     ui->labelImmatureText->setVisible(showImmature || showWatchOnlyImmature);
-    ui->labelWatchImmature->setVisible(showImmature && showWatchOnly); // show watch-only immature balance
-	bool showzABETAvailable = settingShowAllBalances; //|| zerocoinBalance != matureZerocoinBalance;
-	bool showzABETUnconfirmed = settingShowAllBalances; //|| unconfirmedZerocoinBalance != 0;
-	bool showzABETImmature = settingShowAllBalances; //|| immatureZerocoinBalance != 0;
-    //ui->labelzBalanceMature->setVisible(showzABETAvailable);
-    //ui->labelzBalanceMatureText->setVisible(showzABETAvailable);
-    //ui->labelzBalanceUnconfirmed->setVisible(showzABETUnconfirmed);
-    //ui->labelzBalanceUnconfirmedText->setVisible(showzABETUnconfirmed);
-    //ui->labelzBalanceImmature->setVisible(showzABETImmature);
-    //ui->labelzBalanceImmatureText->setVisible(showzABETImmature);
-    //bool showPercentages = ! (nTotalBalance == 0); //(zerocoinBalance == 0 && nTotalBalance == 0);
-    //ui->labelABETPercent->setVisible(showPercentages);
-    //ui->labelzABETPercent->setVisible(showPercentages);
+    ui->labelWatchImmature->setVisible(showImmature && showWatchOnly);
+	bool showzABETAvailable = settingShowAllBalances; 
+	bool showzABETUnconfirmed = settingShowAllBalances;
+	bool showzABETImmature = settingShowAllBalances;
 
     static int cachedTxLocks = 0;
 
@@ -404,12 +348,10 @@ void OverviewPage::setWalletModel(WalletModel* model)
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
         // Keep up to date with wallet
-        setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(),
-                   //model->getZerocoinBalance(), model->getUnconfirmedZerocoinBalance(), model->getImmatureZerocoinBalance(), 
+        setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(), 
                    model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
         connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this, 
 					SLOT(setBalance(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
-                         //SLOT(setBalance(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
 
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
         connect(model->getOptionsModel(), SIGNAL(hideZeroBalancesChanged(bool)), this, SLOT(updateDisplayUnit()));
@@ -427,7 +369,7 @@ void OverviewPage::updateDisplayUnit()
     if (walletModel && walletModel->getOptionsModel()) {
         nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
         if (currentBalance != -1)
-            setBalance(currentBalance, currentUnconfirmedBalance, currentImmatureBalance, //currentZerocoinBalance, currentUnconfirmedZerocoinBalance, currentimmatureZerocoinBalance,
+            setBalance(currentBalance, currentUnconfirmedBalance, currentImmatureBalance,
                 currentWatchOnlyBalance, currentWatchUnconfBalance, currentWatchImmatureBalance);
 
         // Update txdelegate->unit with the current unit
