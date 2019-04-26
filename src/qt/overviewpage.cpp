@@ -448,7 +448,7 @@ void OverviewPage::updateMasternodeInfo()
 		CAmount tNodesSumm = mn1 * 5000;
         CAmount tMoneySupply = chainActive.Tip()->nMoneySupply;
         double tLocked = tMoneySupply > 0 ? 100 * static_cast<double>(tNodesSumm) / static_cast<double>(tMoneySupply / COIN) : 0;
-        ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
+        //ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
 
         // Update Timer
         if (timerinfo_mn->interval() == 1000)
