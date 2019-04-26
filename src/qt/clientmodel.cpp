@@ -20,6 +20,7 @@
 #include "net.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "base58.h"
 
 #include <stdint.h>
 
