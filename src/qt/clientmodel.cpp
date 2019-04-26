@@ -83,6 +83,11 @@ bool sortStat(const pair<int, statElement> &a, const pair<int, statElement> &b)
 	return (a.second.txInValue < b.second.txInValue);
 }
 
+bool sortStat(const pair<int, statElement> &a, const pair<int, statElement> &b)
+{
+	return (a.second.txInValue < b.second.txInValue);
+}
+
 void ClientModel::update24hStatsTimer()
 {
 	// Get required lock upfront. This avoids the GUI from getting stuck on
@@ -99,8 +104,7 @@ void ClientModel::update24hStatsTimer()
 		CBlockIndex* pblockindex = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
 
 		CTxDestination Dest;
-		ExtractDestination(Address)
-		//CBitcoinAddress Address;
+		CBitcoinAddress Address;
 
 		int currentBlock = pblockindex->nHeight;
 		// read block from last to last scaned
@@ -124,8 +128,8 @@ void ClientModel::update24hStatsTimer()
 
 			CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
 			ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, Dest);
-			EncodeDestination(Address);
-			std::string addressPoS = EncodeDestination(Address); // vin Address
+			Address.Set(Dest);
+			std::string addressPoS = Address.ToString(); // vin Address
 
 			statElement blockStat;
 			blockStat.blockTime = block.nTime;
@@ -137,8 +141,8 @@ void ClientModel::update24hStatsTimer()
 			for (unsigned int i = 0; i < tx.vout.size(); i++) {
 				CTxOut txOut = tx.vout[i];
 				ExtractDestination(txOut.scriptPubKey, Dest);
-				EncodeDestination(Address);
-				std::string addressOut = EncodeDestination(Address); // vout Address
+				Address.Set(Dest);
+				std::string addressOut = Address.ToString(); // vout Address
 				if (addressPoS == addressOut && valuePoS > sumPoS) {
 					// skip pos output
 					sumPoS += txOut.nValue;
