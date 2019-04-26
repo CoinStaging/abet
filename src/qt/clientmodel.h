@@ -99,7 +99,7 @@ private:
 
     QTimer* pollTimer;
     QTimer* pollMnTimer;
-	QTimer* poll24hStatsTimer;
+	//QTimer* poll24hStatsTimer;
 
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
@@ -110,7 +110,7 @@ signals:
     void strMasternodesChanged(const QString& strMasternodes);
     void alertsChanged(const QString& warnings);
     void bytesChanged(quint64 totalBytesIn, quint64 totalBytesOut);
-	void stats24hUpdated();
+	//void stats24hUpdated();
 
     //! Fired when a message should be reported to the user
     void message(const QString& title, const QString& message, unsigned int style);
@@ -124,7 +124,7 @@ public slots:
     void updateNumConnections(int numConnections);
     void updateAlert(const QString& hash, int status);
     void updateBanlist();
-	void update24hStatsTimer();
+	//void update24hStatsTimer();
 };
 
 #endif // BITCOIN_QT_CLIENTMODEL_H

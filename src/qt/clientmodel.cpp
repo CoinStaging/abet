@@ -67,10 +67,11 @@ ClientModel::ClientModel(OptionsModel* optionsModel, QObject* parent) : QObject(
     // no need to update as frequent as data for balances/txes/blocks
     pollMnTimer->start(MODEL_UPDATE_DELAY * 4);
 
+	/*
 	poll24hStatsTimer = new QTimer(this);
 	connect(poll24hStatsTimer, SIGNAL(timeout()), this, SLOT(update24hStatsTimer()));
 	poll24hStatsTimer->start(MODEL_UPDATE_DELAY * 4);
-
+	*/
     subscribeToCoreSignals();
 }
 
