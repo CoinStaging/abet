@@ -694,7 +694,7 @@
                         <number>12</number>
                        </property>
                        <item row="1" column="1">
-                        <widget class="QLabel" name="labelMnTotal_Value_4">
+                        <widget class="QLabel" name="labelMnTotal_Value">
                          <property name="font">
                           <font>
                            <weight>75</weight>
@@ -719,7 +719,7 @@
                         </widget>
                        </item>
                        <item row="3" column="1">
-                        <widget class="QLabel" name="roi_6">
+                        <widget class="QLabel" name="roi_1">
                          <property name="font">
                           <font>
                            <weight>75</weight>
@@ -744,21 +744,21 @@
                         </widget>
                        </item>
                        <item row="0" column="0">
-                        <widget class="QLabel" name="label_Needed_Collat_4">
+                        <widget class="QLabel" name="label_Needed_Collat">
                          <property name="text">
                           <string>Collateral:</string>
                          </property>
                         </widget>
                        </item>
                        <item row="3" column="0">
-                        <widget class="QLabel" name="label_Days_ROI_4">
+                        <widget class="QLabel" name="label_Days_ROI">
                          <property name="text">
                           <string>Days Till ROI:</string>
                          </property>
                         </widget>
                        </item>
                        <item row="2" column="1">
-                        <widget class="QLabel" name="roi_7">
+                        <widget class="QLabel" name="roi">
                          <property name="font">
                           <font>
                            <weight>75</weight>
@@ -796,14 +796,14 @@
                         </spacer>
                        </item>
                        <item row="1" column="0">
-                        <widget class="QLabel" name="label_MN_Online_4">
+                        <widget class="QLabel" name="label_MN_Online">
                          <property name="text">
                           <string>MN Online:</string>
                          </property>
                         </widget>
                        </item>
                        <item row="0" column="1">
-                        <widget class="QLabel" name="label_lcolat_4">
+                        <widget class="QLabel" name="label_lcolat">
                          <property name="font">
                           <font>
                            <weight>75</weight>
@@ -854,7 +854,7 @@
                         </spacer>
                        </item>
                        <item row="2" column="0">
-                        <widget class="QLabel" name="label_Daily_Rewards_4">
+                        <widget class="QLabel" name="label_Daily_Rewards">
                          <property name="text">
                           <string>Daily Rewards:</string>
                          </property>
@@ -937,7 +937,7 @@
                         <number>12</number>
                        </property>
                        <item row="1" column="1">
-                        <widget class="QLabel" name="label_CurrentBlockReward_value_4">
+                        <widget class="QLabel" name="label_CurrentBlockReward_value">
                          <property name="font">
                           <font>
                            <weight>75</weight>
@@ -962,7 +962,7 @@
                         </widget>
                        </item>
                        <item row="3" column="1">
-                        <widget class="QLabel" name="label_Supply_value_4">
+                        <widget class="QLabel" name="label_Supply_value">
                          <property name="font">
                           <font>
                            <weight>75</weight>
@@ -987,14 +987,14 @@
                         </widget>
                        </item>
                        <item row="3" column="0">
-                        <widget class="QLabel" name="label_Supply_4">
+                        <widget class="QLabel" name="label_Supply">
                          <property name="text">
                           <string>Coin Supply:</string>
                          </property>
                         </widget>
                        </item>
                        <item row="2" column="1">
-                        <widget class="QLabel" name="label_Nethash_value_4">
+                        <widget class="QLabel" name="label_Nethash_value">
                          <property name="font">
                           <font>
                            <weight>75</weight>
@@ -1019,7 +1019,7 @@
                         </widget>
                        </item>
                        <item row="0" column="0">
-                        <widget class="QLabel" name="label_CurrentBlock_4">
+                        <widget class="QLabel" name="label_CurrentBlock">
                          <property name="text">
                           <string>Current Block:</string>
                          </property>
@@ -1065,14 +1065,14 @@
                         </spacer>
                        </item>
                        <item row="2" column="0">
-                        <widget class="QLabel" name="label_Nethash_4">
+                        <widget class="QLabel" name="label_Nethash">
                          <property name="text">
                           <string>Network Hash:</string>
                          </property>
                         </widget>
                        </item>
                        <item row="1" column="0">
-                        <widget class="QLabel" name="label_CurrentBlockReward_4">
+                        <widget class="QLabel" name="label_CurrentBlockReward">
                          <property name="text">
                           <string>Block Reward:</string>
                          </property>
@@ -1092,7 +1092,7 @@
                         </spacer>
                        </item>
                        <item row="0" column="1">
-                        <widget class="QLabel" name="label_CurrentBlock_value_4">
+                        <widget class="QLabel" name="label_CurrentBlock_value">
                          <property name="font">
                           <font>
                            <weight>75</weight>
