@@ -428,16 +428,13 @@ void OverviewPage::updateMasternodeInfo()
         }
         totalmn = mn1 + mn2 + mn3 + mn4;
         ui->labelMnTotal_Value->setText(QString::number(totalmn));
-        //ui->graphMN->setMaximum(totalmn);
-        //ui->graphMN->setValue(mn1);
-
 
         // TODO: need a read actual 24h blockcount from chain
-        int BlockCount24h = block24hCount > 0 ? block24hCount : 1440;
+        int BlockCount24h = 1440;
 
         // Update ROI
         double BlockReward = GetBlockValue(chainActive.Height());
-        double roi_1 = (0.90 * BlockReward * BlockCount24h) / mn1 / COIN;
+        double roi1 = (0.90 * BlockReward * BlockCount24h) / mn1 / COIN;
 
         if (chainActive.Height() <= 270000 && chainActive.Height() > 280000) { //90%
             ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  ABET"));
@@ -479,9 +476,9 @@ void OverviewPage::updatBlockChainInfo()
         ui->label_Nethash_value->setText(QString::number(CurrentDiff, 'f', 4));
         ui->label_CurrentBlockReward_value->setText(QString::number(BlockRewardabetcoin, 'f', 1));
         ui->label_Supply_value->setText(QString::number(chainActive.Tip()->nMoneySupply / COIN).append(" ABET"));
-		ui->label_24hBlock_value->setText(QString::number(block24hCount));
-        ui->label_24hPoS_value->setText(QString::number(static_cast<double>(posMin) / COIN, 'f', 1).append(" | ") + QString::number(static_cast<double>(posMax) / COIN, 'f', 1));
-        ui->label_24hPoSMedian_value->setText(QString::number(static_cast<double>(posMedian) / COIN, 'f', 1));
+		//ui->label_24hBlock_value->setText(QString::number(block24hCount));
+        //ui->label_24hPoS_value->setText(QString::number(static_cast<double>(posMin) / COIN, 'f', 1).append(" | ") + QString::number(static_cast<double>(posMax) / COIN, 'f', 1));
+        //ui->label_24hPoSMedian_value->setText(QString::number(static_cast<double>(posMedian) / COIN, 'f', 1));
     }
 }
 

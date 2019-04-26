@@ -42,8 +42,8 @@ enum NumConnections {
 };
 
 extern std::map<std::string, CAmount> masternodeRewards;
-extern CAmount posMin, posMax, posMedian;
-extern int block24hCount;
+//extern CAmount posMin, posMax, posMedian;
+//extern int block24hCount;
 extern CAmount lockedCoin;
 extern double roi1;
 

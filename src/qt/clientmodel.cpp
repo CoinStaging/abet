@@ -79,6 +79,7 @@ ClientModel::~ClientModel()
     unsubscribeFromCoreSignals();
 }
 
+/*
 bool sortStat(const pair<int, statElement> &a, const pair<int, statElement> &b)
 {
 	return (a.second.txInValue < b.second.txInValue);
@@ -101,8 +102,8 @@ if (masternodeSync.IsBlockchainSynced()) {
             CBlock block;
             CBlockIndex* pblockindex = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
 
-            CTxDestination Dest;
-            CBitcoinAddress Address;
+            CTxDestination Address;
+            EncodeDestination Address;
 
             int currentBlock = pblockindex->nHeight;
             // read block from last to last scaned
@@ -125,7 +126,7 @@ if (masternodeSync.IsBlockchainSynced()) {
                     continue; // skip if not found txin
 
                 CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
-                ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, Dest);
+                ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, Address);
                 Address.Set(Dest);
                 std::string addressPoS = Address.ToString(); // vin Address
 
@@ -204,7 +205,7 @@ if (masternodeSync.IsBlockchainSynced()) {
 
         // sending signal
         //emit stats24hUpdated();
-}
+}*/
 
 
 int ClientModel::getNumConnections(unsigned int flags) const
