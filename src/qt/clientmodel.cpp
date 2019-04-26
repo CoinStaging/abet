@@ -83,11 +83,6 @@ bool sortStat(const pair<int, statElement> &a, const pair<int, statElement> &b)
 	return (a.second.txInValue < b.second.txInValue);
 }
 
-bool sortStat(const pair<int, statElement> &a, const pair<int, statElement> &b)
-{
-	return (a.second.txInValue < b.second.txInValue);
-}
-
 void ClientModel::update24hStatsTimer()
 {
 	// Get required lock upfront. This avoids the GUI from getting stuck on
