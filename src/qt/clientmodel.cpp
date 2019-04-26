@@ -95,129 +95,115 @@ void ClientModel::update24hStatsTimer()
 	TRY_LOCK(cs_main, lockStat);
 	if (!lockStat) return;
 
-	if (masternodeSync.IsBlockchainSynced() && !IsInitialBlockDownload()) {
-		qDebug() << __FUNCTION__ << ": Process stats...";
-		const int64_t syncStartTime = GetTime();
+if (masternodeSync.IsBlockchainSynced()) {
+            const int64_t syncStartTime = GetTime();
 
-		CBlock block;
-		CBlockIndex* pblockindex = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
+            CBlock block;
+            CBlockIndex* pblockindex = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
 
-		CTxDestination Dest;
-		//CBitcoinAddress Address;
+            CTxDestination Dest;
+            CBitcoinAddress Address;
 
-		int currentBlock = pblockindex->nHeight;
-		// read block from last to last scaned
-		while (pblockindex->nHeight > blockLast) {
-			if (ReadBlockFromDisk(block, pblockindex)) {
-				if (block.IsProofOfStake()) {
-					// decode transactions
-					const CTransaction& tx = block.vtx[1];
-					if (tx.IsCoinStake()) {
-						// decode txIn
-						CTransaction txIn;
-						uint256 hashBlock;
-						if (GetTransaction(tx.vin[0].prevout.hash, txIn, hashBlock, true)) {
-							CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
-							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, EncodeDestination(Dest));
-                            DecodeDestination(Dest);
-							std::string addressPoS = DecodeDestination(dest); // vin Address
+            int currentBlock = pblockindex->nHeight;
+            // read block from last to last scaned
+            while (pblockindex->nHeight > blockLast) {
+                if (!ReadBlockFromDisk(block, pblockindex))
+                    return;
 
-							statElement blockStat;
-							blockStat.blockTime = block.nTime;
-							blockStat.txInValue = valuePoS;
-							blockStat.mnPayee.clear();
+                if (!block.IsProofOfStake())
+                    continue; // skip not PoS block
 
-							// decode txOut
-							CAmount sumPoS = 0;
-							for (unsigned int i = 0; i < tx.vout.size(); i++) {
-								CTxOut txOut = tx.vout[i];
-								ExtractDestination(txOut.scriptPubKey, Dest);
-                                DecodeDestination(Dest);
-								std::string addressOut = EncodeDestination(dest); // vout Address
-								if (addressPoS == addressOut && valuePoS > sumPoS) {
-									// skip pos output
-									sumPoS += txOut.nValue;
-								}
-								else {
-									// store vout payee and value
-									blockStat.mnPayee.push_back(make_pair(addressOut, txOut.nValue));
-									// and update node rewards
-									masternodeRewards[addressOut] += txOut.nValue;
-								}
-							}
-							// store block stat
-							statSourceData.push_back(make_pair(pblockindex->nHeight, blockStat));
-							// stop if blocktime over 24h past
-							if ((block.nTime + 24 * 60 * 60) < syncStartTime) {
-								blockOldest = pblockindex->nHeight;
-								break;
-							}
-						}
-					}
-				}
-			}
-			// select next (previous) block
-			pblockindex = pblockindex->pprev;
-		}
+                // decode transactions
+                const CTransaction& tx = block.vtx[1];
+                if (!tx.IsCoinStake())
+                    continue; // skip if tx is not coin stake
 
-		// clear over 24h block data
-		std::vector<pair<std::string, CAmount>> tMN;
-		std::string tAddress;
-		CAmount tValue;
-		if (statSourceData.size() > 0) {
-			for (auto it = statSourceData.rbegin(); it != statSourceData.rend(); ++it) {
-				if ((it->second.blockTime + 24 * 60 * 60) < syncStartTime) {
-					tMN = it->second.mnPayee;
-					for (auto im = tMN.begin(); im != tMN.end(); ++im) {
-						tAddress = im->first;
-						tValue = im->second;
-						masternodeRewards[tAddress] -= tValue;
-					}
-					// remove element
-					*it = statSourceData.back();
-					statSourceData.pop_back();
-				}
-			}
-		}
+                // decode txIn
+                CTransaction txIn;
+                uint256 hashBlock;
+                if (!GetTransaction(tx.vin[0].prevout.hash, txIn, hashBlock, true))
+                    continue; // skip if not found txin
 
-		// recalc stats data if new block found
-		if (currentBlock > blockLast && statSourceData.size() > 0) {
-			// sorting vector and get stats values
-			sort(statSourceData.begin(), statSourceData.end(), sortStat);
+                CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
+                ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, Dest);
+                Address.Set(Dest);
+                std::string addressPoS = Address.ToString(); // vin Address
 
-			if (statSourceData.size() > 100) {
-				CAmount posAverage = 0;
-				for (auto it = statSourceData.begin(); it != statSourceData.begin() + 100; ++it)
-					posAverage += it->second.txInValue;
-				posMin = posAverage / 100;
-				for (auto it = statSourceData.rbegin(); it != statSourceData.rbegin() + 100; ++it)
-					posAverage += it->second.txInValue;
-				posMax = posAverage / 100;
-			}
-			else {
-				posMin = statSourceData.front().second.txInValue;
-				posMax = statSourceData.back().second.txInValue;
-			}
+                statElement blockStat;
+                blockStat.blockTime = block.nTime;
+                blockStat.txInValue = valuePoS;
+                blockStat.mnPayee.clear();
 
-			if (statSourceData.size() % 2) {
-				posMedian = (statSourceData[int(statSourceData.size() / 2)].second.txInValue + statSourceData[int(statSourceData.size() / 2) - 1].second.txInValue) / 2;
-			}
-			else {
-				posMedian = statSourceData[int(statSourceData.size() / 2) - 1].second.txInValue;
-			}
-			block24hCount = statSourceData.size();
-		}
+                // decode txOut
+                CAmount sumPoS = 0;
+                for (unsigned int i = 0; i < tx.vout.size(); i++) {
+                    CTxOut txOut = tx.vout[i];
+                    ExtractDestination(txOut.scriptPubKey, Dest);
+                    Address.Set(Dest);
+                    std::string addressOut = Address.ToString(); // vout Address
+                    if (addressPoS == addressOut && valuePoS > sumPoS) {
+                        // skip pos output
+                        sumPoS += txOut.nValue;
+                    } else {
+                        // store vout payee and value
+                        blockStat.mnPayee.push_back(make_pair(addressOut, txOut.nValue));
+                        // and update node rewards
+                        masternodeRewards[addressOut] += txOut.nValue;
+                    }
+                }
 
-		blockLast = currentBlock;
+                // store block stat
+                statSourceData.push_back(make_pair(pblockindex->nHeight, blockStat));
 
-		if (poll24hStatsTimer->interval() < 30000)
-			poll24hStatsTimer->setInterval(30000);
+                // stop if blocktime over 24h past
+                if ((block.nTime + 24 * 60 * 60) < syncStartTime) {
+                    blockOldest = pblockindex->nHeight;
+                    break;
+                }
+                // select next (previous) block
+                pblockindex = pblockindex->pprev;
+            }
 
-		qDebug() << __FUNCTION__ << ": Stats ready...";
-	}
+            // clear over 24h block data
+            std::vector<pair<std::string, CAmount> > tMN;
+            std::string tAddress;
+            CAmount tValue;
+            for (auto it = statSourceData.rbegin(); it != statSourceData.rend(); ++it) {
+                if ((it->second.blockTime + 24 * 60 * 60) < syncStartTime) {
+                    tMN = it->second.mnPayee;
+                    for (auto im = tMN.begin(); im != tMN.end(); ++im) {
+                        tAddress = im->first;
+                        tValue = im->second;
+                        masternodeRewards[tAddress] -= tValue;
+                    }
+                    // remove element
+                    *it = statSourceData.back();
+                    statSourceData.pop_back();
+                }
+            }
 
-	// sending signal
-	//emit stats24hUpdated();
+            // recalc stats data if new block found
+            if (currentBlock > blockLast) {
+                // sorting vector and get stats values
+                sort(statSourceData.begin(), statSourceData.end(), sortStat);
+                posMin = statSourceData.front().second.txInValue;
+                posMax = statSourceData.back().second.txInValue;
+                if (statSourceData.size() % 2) {
+                    posMedian = (statSourceData[int(statSourceData.size() / 2)].second.txInValue + statSourceData[int(statSourceData.size() / 2) - 1].second.txInValue) / 2;
+                } else {
+                    posMedian = statSourceData[int(statSourceData.size() / 2) - 1].second.txInValue;
+                }
+                block24hCount = statSourceData.size();
+            }
+
+            blockLast = currentBlock;
+        }
+
+        if (poll24hStatsTimer->interval() == 1000)
+            poll24hStatsTimer->setInterval(30000);
+
+        // sending signal
+        //emit stats24hUpdated();
 }
 
 
