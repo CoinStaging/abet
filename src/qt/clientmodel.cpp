@@ -118,7 +118,7 @@ void ClientModel::update24hStatsTimer()
 						uint256 hashBlock;
 						if (GetTransaction(tx.vin[0].prevout.hash, txIn, hashBlock, true)) {
 							CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
-							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, EncodeDestination(Dest));
+							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, EncodeDestination(Dest).Get());
 							EncodeDestination(Dest);
 							std::string addressPoS = EncodeDestination(dest); // vin Address
 
