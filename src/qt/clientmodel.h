@@ -9,6 +9,7 @@
 #define BITCOIN_QT_CLIENTMODEL_H
 
 #include "amount.h"
+#include "sync.h"
 #include <QObject>
 #include <map>
 #include <QDateTime>
