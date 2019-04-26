@@ -119,7 +119,6 @@ void ClientModel::update24hStatsTimer()
 						if (GetTransaction(tx.vin[0].prevout.hash, txIn, hashBlock, true)) {
 							CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
 							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey = GetScriptForDestination(CBitcoinAddress(EncodeDestination(dest)).Get());
-							EncodeDestination(Dest);
 							std::string addressPoS = EncodeDestination(dest); // vin Address
 
 							statElement blockStat;
