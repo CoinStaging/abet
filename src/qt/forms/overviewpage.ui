@@ -614,7 +614,7 @@
                     </widget>
                    </item>
                    <item row="9" column="1">
-                    <widget class="QLabel" name="roi_4">
+                    <widget class="QLabel" name="roi_1">
                      <property name="font">
                       <font>
                        <weight>75</weight>
