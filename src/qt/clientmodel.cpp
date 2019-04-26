@@ -41,6 +41,7 @@ static int blockOldest = 0;
 static int blockLast = 0;
 static std::vector<std::pair<int, statElement>> statSourceData;
 
+CCriticalSection cs_stat;
 map<std::string, CAmount> masternodeRewards;
 CAmount posMin, posMax, posMedian;
 int block24hCount;
@@ -117,7 +118,7 @@ void ClientModel::update24hStatsTimer()
 						uint256 hashBlock;
 						if (GetTransaction(tx.vin[0].prevout.hash, txIn, hashBlock, true)) {
 							CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
-							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, Dest);
+							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, EncodeDestination(Dest));
 							EncodeDestination(Dest);
 							std::string addressPoS = EncodeDestination(dest); // vin Address
 
