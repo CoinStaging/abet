@@ -102,7 +102,7 @@ void ClientModel::update24hStatsTimer()
 		CBlock block;
 		CBlockIndex* pblockindex = mapBlockIndex[chainActive.Tip()->GetBlockHash()];
 
-		CTxDestination dest;
+		CTxDestination Dest;
 		//CBitcoinAddress Address;
 
 		int currentBlock = pblockindex->nHeight;
@@ -118,7 +118,8 @@ void ClientModel::update24hStatsTimer()
 						uint256 hashBlock;
 						if (GetTransaction(tx.vin[0].prevout.hash, txIn, hashBlock, true)) {
 							CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
-							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey = GetScriptForDestination(CBitcoinAddress(EncodeDestination(dest)).Get());
+							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, EncodeDestination(Dest));
+							EncodeDestination(Dest);
 							std::string addressPoS = EncodeDestination(dest); // vin Address
 
 							statElement blockStat;
