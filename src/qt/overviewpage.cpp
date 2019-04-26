@@ -437,11 +437,11 @@ void OverviewPage::updateMasternodeInfo()
         double roi1 = (0.90 * BlockReward * BlockCount24h) / mn1 / COIN;
 
         if (chainActive.Height() <= 270000 && chainActive.Height() > 280000) { //90%
-            ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  ABET"));
+            ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  ABET"));
             ui->roi_1->setText(mn1 == 0 ? " " : QString::number(5000 / roi1, 'f', 1).append(" days"));
 
         } else if (chainActive.Height() > 280000) { //90%
-            ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  ABET"));
+            ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  ABET"));
             ui->roi_1->setText(mn1 == 0 ? " " : QString::number(5000 / roi1, 'f', 1).append(" days"));
         }
 
