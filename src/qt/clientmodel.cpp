@@ -42,7 +42,6 @@ static int blockOldest = 0;
 static int blockLast = 0;
 static std::vector<std::pair<int, statElement>> statSourceData;
 
-CCriticalSection cs_stat;
 map<std::string, CAmount> masternodeRewards;
 CAmount posMin, posMax, posMedian;
 int block24hCount;
@@ -90,10 +89,10 @@ void ClientModel::update24hStatsTimer()
 	// Get required lock upfront. This avoids the GUI from getting stuck on
 	// periodical polls if the core is holding the locks for a longer time -
 	// for example, during a wallet rescan.
-	TRY_LOCK(cs_main, lockMain);
+    TRY_LOCK(cs_main, lockMain);
 	if (!lockMain) return;
 
-	TRY_LOCK(cs_stat, lockStat);
+	TRY_LOCK(cs_main, lockStat);
 	if (!lockStat) return;
 
 	if (masternodeSync.IsBlockchainSynced() && !IsInitialBlockDownload()) {
@@ -120,8 +119,8 @@ void ClientModel::update24hStatsTimer()
 						if (GetTransaction(tx.vin[0].prevout.hash, txIn, hashBlock, true)) {
 							CAmount valuePoS = txIn.vout[tx.vin[0].prevout.n].nValue; // vin Value
 							ExtractDestination(txIn.vout[tx.vin[0].prevout.n].scriptPubKey, EncodeDestination(Dest));
-							EncodeDestination(Dest);
-							std::string addressPoS = EncodeDestination(dest); // vin Address
+                            DecodeDestination(Dest);
+							std::string addressPoS = DecodeDestination(dest); // vin Address
 
 							statElement blockStat;
 							blockStat.blockTime = block.nTime;
@@ -133,7 +132,7 @@ void ClientModel::update24hStatsTimer()
 							for (unsigned int i = 0; i < tx.vout.size(); i++) {
 								CTxOut txOut = tx.vout[i];
 								ExtractDestination(txOut.scriptPubKey, Dest);
-								EncodeDestination(Dest);
+                                DecodeDestination(Dest);
 								std::string addressOut = EncodeDestination(dest); // vout Address
 								if (addressPoS == addressOut && valuePoS > sumPoS) {
 									// skip pos output
