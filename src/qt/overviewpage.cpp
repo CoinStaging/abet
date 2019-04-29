@@ -434,21 +434,15 @@ void OverviewPage::updateMasternodeInfo()
 
         // Update ROI
         double BlockReward = GetBlockValue(chainActive.Height());
-        double roi_1 = (0.90 * BlockReward * BlockCount24h) / mn1 / COIN;
+        double roi1 = (0.90 * BlockReward * BlockCount24h) / mn1 / COIN;
 
-        if (chainActive.Height() <= 270000 && chainActive.Height() > 280000) { //90%
-            ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi_1, 'f', 0).append("  ABET"));
-            ui->roi_1->setText(mn1 == 0 ? " " : QString::number(5000 / roi_1, 'f', 1).append(" days"));
-
-        } else if (chainActive.Height() > 280000) { //90%
-            ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi_1, 'f', 0).append("  ABET"));
-            ui->roi_1->setText(mn1 == 0 ? " " : QString::number(5000 / roi_1, 'f', 1).append(" days"));
-        }
+		ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  |"));
+        ui->roi_2->setText(mn1 == 0 ? " " : QString::number(5000 / roi1, 'f', 1).append(" days"));
 
 		CAmount tNodesSumm = mn1 * 5000;
         CAmount tMoneySupply = chainActive.Tip()->nMoneySupply;
         double tLocked = tMoneySupply > 0 ? 100 * static_cast<double>(tNodesSumm) / static_cast<double>(tMoneySupply / COIN) : 0;
-        //ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
+        ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
 
         // Update Timer
         if (timerinfo_mn->interval() == 1000)
@@ -472,8 +466,8 @@ void OverviewPage::updatBlockChainInfo()
         double CurrentDiff = GetDifficulty();
 
         ui->label_CurrentBlock_value->setText(QString::number(CurrentBlock));
-        ui->label_Nethash->setText(tr("Difficulty:"));
-        ui->label_Nethash_value->setText(QString::number(CurrentDiff, 'f', 4));
+        //ui->label_Nethash->setText(tr("Difficulty:"));
+        //ui->label_Nethash_value->setText(QString::number(CurrentDiff, 'f', 4));
         ui->label_CurrentBlockReward_value->setText(QString::number(BlockRewardabetcoin, 'f', 1));
         ui->label_Supply_value->setText(QString::number(chainActive.Tip()->nMoneySupply / COIN).append(" ABET"));
 		//ui->label_24hBlock_value->setText(QString::number(block24hCount));
