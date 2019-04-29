@@ -438,7 +438,7 @@ void OverviewPage::updateMasternodeInfo()
 
         if (chainActive.Height() <= 270000 && chainActive.Height() > 280000) { //90%
             ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi_1, 'f', 0).append("  ABET"));
-            ui->roi_1->setText(mn1 == 0 ? " " : QString::number(5000 / roi1_, 'f', 1).append(" days"));
+            ui->roi_1->setText(mn1 == 0 ? " " : QString::number(5000 / roi_1, 'f', 1).append(" days"));
 
         } else if (chainActive.Height() > 280000) { //90%
             ui->roi->setText(mn1 == 0 ? "-" : QString::number(roi_1, 'f', 0).append("  ABET"));
