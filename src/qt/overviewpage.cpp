@@ -436,19 +436,22 @@ void OverviewPage::updateMasternodeInfo()
 		double BlockReward = GetBlockValue(chainActive.Height());
         double roi1 = (0.90 * BlockReward * BlockCount24h) / mn1 / COIN;
 
-		ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  |"));
-        ui->roi_2->setText(mn1 == 0 ? " " : QString::number(5000 / roi1, 'f', 1).append(" days"));
+
 
         if (IsSporkActive(SPORK_26_NEW_COLLATERAL)) {
             CAmount tNodesSumm = mn1 * 5000;
             CAmount tMoneySupply = chainActive.Tip()->nMoneySupply;
             double tLocked = tMoneySupply > 0 ? 100 * static_cast<double>(tNodesSumm) / static_cast<double>(tMoneySupply / COIN) : 0;
             ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
+            ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  "));
+            ui->roi_2->setText(mn1 == 0 ? " " : QString::number(5000 / roi1, 'f', 1).append(" days"));
 		}else{
             CAmount tNodesSumm = mn1 * 1000;
             CAmount tMoneySupply = chainActive.Tip()->nMoneySupply;
             double tLocked = tMoneySupply > 0 ? 100 * static_cast<double>(tNodesSumm) / static_cast<double>(tMoneySupply / COIN) : 0;
             ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
+            ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  "));
+            ui->roi_2->setText(mn1 == 0 ? " " : QString::number(1000 / roi1, 'f', 1).append(" days"));
 		}
 
         // Update Timer
