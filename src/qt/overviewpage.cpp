@@ -455,7 +455,7 @@ void OverviewPage::updateMasternodeInfo()
     }
 
     // Update Collateral Info
-    if (IsSporkActive(SPORK_26_NEW_COLLATERAL) {
+    if (IsSporkActive(SPORK_26_NEW_COLLATERAL)) {
         ui->label_lcolat->setText("5000 ABET") 
 	}else{ 
 		ui->label_lcolat->setText("1000 ABET")
