@@ -600,7 +600,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Your current total balance</string>
+                      <string>Days to get Return on Investment</string>
                      </property>
                      <property name="text">
                       <string notr="true">0</string>
@@ -625,7 +625,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Staked or masternode rewards that has not yet matured</string>
+                      <string>Daily Rewards for current Collateral</string>
                      </property>
                      <property name="text">
                       <string notr="true">0</string>
@@ -703,7 +703,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Your current spendable balance</string>
+                      <string>Current collateral</string>
                      </property>
                      <property name="text">
                       <string notr="true">5,000 ABET</string>
@@ -728,7 +728,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Your current spendable balance</string>
+                      <string>Current Block Height</string>
                      </property>
                      <property name="text">
                       <string notr="true">0</string>
@@ -760,7 +760,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</string>
+                      <string>Total number of Masternodes Online</string>
                      </property>
                      <property name="text">
                       <string notr="true">0</string>
@@ -792,7 +792,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Your current total balance</string>
+                      <string>Current Coin Supply</string>
                      </property>
                      <property name="text">
                       <string notr="true">0</string>
@@ -817,7 +817,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</string>
+                      <string>Current Block Reward</string>
                      </property>
                      <property name="text">
                       <string notr="true">0</string>
@@ -849,7 +849,7 @@
                       <cursorShape>IBeamCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Staked or masternode rewards that has not yet matured</string>
+                      <string>Total Amount of coins locked</string>
                      </property>
                      <property name="text">
                       <string notr="true">0</string>
