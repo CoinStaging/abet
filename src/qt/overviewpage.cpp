@@ -464,6 +464,7 @@ void OverviewPage::updateMasternodeInfo()
         ui->label_lcolat->setText("5000 ABET"); 
 	}else{ 
 		ui->label_lcolat->setText("1000 ABET");
+
     }
 }
 
@@ -480,6 +481,7 @@ void OverviewPage::updatBlockChainInfo()
         ui->label_CurrentBlock_value->setText(QString::number(CurrentBlock));
         //ui->label_Nethash->setText(tr("Difficulty:"));
         //ui->label_Nethash_value->setText(QString::number(CurrentDiff, 'f', 4));
+
         ui->label_CurrentBlockReward_value->setText(QString::number(BlockRewardabetcoin, 'f', 1));
         ui->label_Supply_value->setText(QString::number(chainActive.Tip()->nMoneySupply / COIN).append(" ABET"));
 		//ui->label_24hBlock_value->setText(QString::number(block24hCount));
