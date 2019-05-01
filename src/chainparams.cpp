@@ -142,6 +142,7 @@ public:
         nMasternodeCountDrift = 20;
         nMasternodeCollateralAmt = 1000;
         nMasternodeCollateralAmtNew = 5000;
+        nMasternodeCollateralGracePeriod = 305000; //Block Height
         nMinStakeInput = 15 * COIN;
         nModifierUpdateBlock = 615800;
         nMaxMoneyOut = 21000000 * COIN;
