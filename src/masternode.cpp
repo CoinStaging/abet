@@ -22,8 +22,8 @@ CAmount GetMasternodeCollateral()
 {
 	if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Tip() <= Params().MasternodeCollateralGracePeriod()) {
         return Params().MasternodeCollateralAmtNew() || Params().MasternodeCollateralAmt();
-    }else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Tip() > Params().MasternodeCollateralGracePeriod()) {
-		return Params().MasternodeCollateralAmtNew()
+	}else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Tip() > Params().MasternodeCollateralGracePeriod()) {
+		return Params().MasternodeCollateralAmtNew();
 	}else {
         return Params().MasternodeCollateralAmt();
 	}
