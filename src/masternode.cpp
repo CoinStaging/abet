@@ -20,9 +20,9 @@ std::map<int64_t, uint256> mapCacheBlockHashes;
 
 CAmount GetMasternodeCollateral()
 {
-	if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Tip()->nHeight <= Params().MasternodeCollateralGracePeriod()) {
+	if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Height() <= Params().MasternodeCollateralGracePeriod()) {
         return Params().MasternodeCollateralAmtNew() || Params().MasternodeCollateralAmt();
-	}else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Tip()->nHeight > Params().MasternodeCollateralGracePeriod()) {
+	}else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Height() > Params().MasternodeCollateralGracePeriod()) {
 		return Params().MasternodeCollateralAmtNew();
 	}else {
         return Params().MasternodeCollateralAmt();
