@@ -315,6 +315,7 @@ public:
 
         nPoolMaxTransactions = 2;
         strSporkKey = "023bdfaa1671a451ebb3fdf4978c7336ce9283f35733006bfe059da6cd195ecf69";
+
         strObfuscationPoolDummyAddress = "Ab5bNTKMKVJWLTDCwwEEvHH9MzDhxRaL5a";
         nStartMasternodePayments = 1539605437; //Fri, 09 Jan 2015 21:05:58 GMT
     }
