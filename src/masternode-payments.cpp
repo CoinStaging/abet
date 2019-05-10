@@ -189,9 +189,18 @@ bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMin
             nHeight = (*mi).second->nHeight + 1;
     }
 
-	if (IsTreasuryBlock(nHeight) && out.nValue == treasuryAmount)) {
-        return true;
-    }
+
+
+	BOOST_FOREACH(CTxOut out, txNew.vout) {
+		CTxDestination address1;
+		ExtractDestination(out.scriptPubKey, address1);
+
+		LogPrint("Block", "IsBlockValid, txOut: address %s, value is %lld\n", EncodeDestination(address1), out.nValue);
+		if (IsTreasuryBlock(nHeight) && out.nValue == treasuryAmount)) {
+		return true;
+		}
+			
+	}
 
     if (nHeight == 0) {
         LogPrint("masternode","IsBlockValueValid() : WARNING: Couldn't find previous block\n");
@@ -273,8 +282,6 @@ bool IsBlockPayeeValid(const CBlock& block, int nBlockHeight)
 		BOOST_FOREACH(CTxOut out, txNew.vout) {
 			CTxDestination address1;
 			ExtractDestination(out.scriptPubKey, address1);
-			//EncodeDestination(address1)
-			//CBitcoinAddress address2(address1);
 
 			LogPrint("masternode", "IsBlockPayeeValid, txOut: address %s, value is %lld\n", EncodeDestination(address1), out.nValue);
 			if (out.nValue == treasuryAmount)
