@@ -190,7 +190,7 @@ bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMin
     }
 
 	
-	if (IsTreasuryBlock(nHeight) <= Params().MasternodeCollateralGracePeriod())
+	if (IsTreasuryBlock(nHeight) <= Params().MasternodeCollateralGracePeriod() && IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT))
     {
 		return true;
 	}
