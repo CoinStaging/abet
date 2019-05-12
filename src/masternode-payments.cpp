@@ -190,7 +190,8 @@ bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMin
     }
 
 	
-	if (IsTreasuryBlock(nHeight) && IsTreasuryBlock(pindexPrev->nHeight)){
+	if (IsTreasuryBlock(nHeight) && chainActive.Height() <= Params().MasternodeCollateralGracePeriod())
+        {
 		return true;
 	}
 
