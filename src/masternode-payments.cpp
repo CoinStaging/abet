@@ -189,6 +189,12 @@ bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMin
             nHeight = (*mi).second->nHeight + 1;
     }
 
+	if (IsTreasuryBlock(nHeight)  && GetBlockValue = GetTreasuryAward){
+		return true;
+	}else{
+		return false;
+	}
+
     if (nHeight == 0) {
         LogPrint("masternode","IsBlockValueValid() : WARNING: Couldn't find previous block\n");
     }
@@ -278,15 +284,12 @@ bool IsBlockPayeeValid(const CBlock& block, int nBlockHeight)
 		}
 
 		if (!bFound) {
-			//LogPrint("masternode","Invalid treasury payment detected %s\n", txNew.ToString().c_str());
 			LogPrint("masternode", "Invalid treasury payment detected %s\n", txNew.ToString().c_str());
 
 			LogPrint("masternode", "Check transaction, expected treasury reward is %0.2f\n", treasuryAmount / COIN);
 			BOOST_FOREACH(CTxOut out, txNew.vout) {
 				CTxDestination address1;
 				ExtractDestination(out.scriptPubKey, address1);
-				//EncodeDestination(address1)
-				//CBitcoinAddress address2(address1);
 
 				LogPrint("masternode", "Out: address %s, value is %f\n", EncodeDestination(address1), out.nValue);
 				if (out.nValue == treasuryAmount) {
