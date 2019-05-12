@@ -175,7 +175,7 @@ void DumpMasternodePayments()
     LogPrint("masternode","Budget dump finished  %dms\n", GetTimeMillis() - nStart);
 }
 
-bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMinted, int nBlockHeight)
+bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMinted)
 {
     CBlockIndex* pindexPrev = chainActive.Tip();
     if (pindexPrev == NULL) return true;
@@ -189,8 +189,8 @@ bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMin
             nHeight = (*mi).second->nHeight + 1;
     }
 
-	CAmount treasuryAmount = GetTreasuryAward(nBlockHeight - 1) - 10 * COIN;
-	if (IsTreasuryBlock(nHeight) && GetBlockValue(treasuryAmount)){
+	
+	if (IsTreasuryBlock(nHeight) && IsTreasuryBlock(pindexPrev->nHeight)){
 		return true;
 	}
 
