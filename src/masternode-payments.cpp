@@ -190,10 +190,8 @@ bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMin
     }
 
 	CAmount treasuryAmount = GetTreasuryAward(nBlockHeight - 1) - 10 * COIN;
-	if (IsTreasuryBlock(nHeight) && GetBlockValue(treasuryAmount){
+	if (IsTreasuryBlock(nHeight) && GetBlockValue(treasuryAmount)){
 		return true;
-	}else{
-		return false;
 	}
 
     if (nHeight == 0) {
