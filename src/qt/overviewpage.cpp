@@ -461,9 +461,9 @@ void OverviewPage::updateMasternodeInfo()
 
     // Update Collateral Info
     if (IsSporkActive(SPORK_26_NEW_COLLATERAL)) {
-        ui->label_lcolat->setText(Params().MasternodeCollateralAmtNew()); 
+        ui->label_lcolat->setText("10000"); 
 	}else{ 
-		ui->label_lcolat->setText(Params().MasternodeCollateralAmt());
+		ui->label_lcolat->setText("1000");
 
     }
 }
