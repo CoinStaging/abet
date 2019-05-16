@@ -146,8 +146,8 @@ public:
         nMaturity = 15;
         nMasternodeCountDrift = 20;
         nMasternodeCollateralAmt = 1000;
-        nMasternodeCollateralAmtNew = 10000;
-        nMasternodeCollateralGracePeriod = 305000; //Block Height
+        nMasternodeCollateralAmtNew = 5000;
+        nMasternodeCollateralAmtEnd = 10000;
         nMinStakeInput = 15 * COIN;
         nModifierUpdateBlock = 615800;
         nMaxMoneyOut = 21000000 * COIN;
@@ -279,7 +279,6 @@ public:
         nMasternodeCountDrift = 4;
         nMasternodeCollateralAmt = 1000;
         nMasternodeCollateralAmtNew = 5000;
-        nMasternodeCollateralGracePeriod = 305000; //Block Height
         nMinStakeInput = 15 * COIN;
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
         nMaxMoneyOut = 43199500 * COIN;
