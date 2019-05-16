@@ -155,7 +155,7 @@ protected:
     int nMasternodeCountDrift;
     int nMasternodeCollateralAmt;
     int nMasternodeCollateralAmtNew;
-    int nMasternodeCollateralAmtNewEnd;
+    int nMasternodeCollateralAmtEnd;
     int nMaturity;
     unsigned int nStakeMaturity;
     int nModifierUpdateBlock;

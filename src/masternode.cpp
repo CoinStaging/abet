@@ -22,7 +22,7 @@ CAmount GetMasternodeCollateral()
 {
     if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Height >= 308000 && chainActive.Height < 351000) {
         return Params().MasternodeCollateralAmtNew();
-    } else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Height() >= 351000) {
+    }else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Height() >= 351000) {
          return Params().MasternodeCollateralAmtEnd();
     }else{
          return Params().MasternodeCollateralAmt();
