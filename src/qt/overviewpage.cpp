@@ -14,6 +14,7 @@
 #include "guiconstants.h"
 #include "guiutil.h"
 #include "init.h"
+#include "spork.h"
 #include "obfuscation.h"
 #include "obfuscationconfig.h"
 #include "optionsmodel.h"
@@ -445,13 +446,20 @@ void OverviewPage::updateMasternodeInfo()
             ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
             ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  "));
             ui->roi_2->setText(mn1 == 0 ? " " : QString::number(5000 / roi1, 'f', 1).append(" days"));
-		}else{
-            CAmount tNodesSumm = mn1 * Params().MasternodeCollateralAmt();
+		}else if (IsSporkActive(SPORK_27_NEW_COLLATERAL_2)) {
+            CAmount tNodesSumm = mn1 * Params().MasternodeCollateralAmtNewEnd();
             CAmount tMoneySupply = chainActive.Tip()->nMoneySupply;
             double tLocked = tMoneySupply > 0 ? 100 * static_cast<double>(tNodesSumm) / static_cast<double>(tMoneySupply / COIN) : 0;
             ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
             ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  "));
             ui->roi_2->setText(mn1 == 0 ? " " : QString::number(1000 / roi1, 'f', 1).append(" days"));
+		}else{
+			CAmount tNodesSumm = mn1 * Params().MasternodeCollateralAmt();
+			CAmount tMoneySupply = chainActive.Tip()->nMoneySupply;
+			double tLocked = tMoneySupply > 0 ? 100 * static_cast<double>(tNodesSumm) / static_cast<double>(tMoneySupply / COIN) : 0;
+			ui->label_LockedCoin_value->setText(QString::number(tNodesSumm).append(" (" + QString::number(tLocked, 'f', 1) + "%)"));
+			ui->roi_1->setText(mn1 == 0 ? "-" : QString::number(roi1, 'f', 0).append("  "));
+			ui->roi_2->setText(mn1 == 0 ? " " : QString::number(1000 / roi1, 'f', 1).append(" days"));
 		}
 
         // Update Timer
@@ -461,10 +469,11 @@ void OverviewPage::updateMasternodeInfo()
 
     // Update Collateral Info
     if (IsSporkActive(SPORK_26_NEW_COLLATERAL)) {
-        ui->label_lcolat->setText("10000"); 
-	}else{ 
+        ui->label_lcolat->setText("5000"); 
+	}else if (IsSporkActive(SPORK_27_NEW_COLLATERAL_2)) {
+		ui->label_lcolat->setText("10000");
+	}else{
 		ui->label_lcolat->setText("1000");
-
     }
 }
 
