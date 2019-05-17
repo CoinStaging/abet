@@ -18,11 +18,11 @@ map<uint256, int> mapSeenMasternodeScanningErrors;
 // cache block hashes as we calculate them
 std::map<int64_t, uint256> mapCacheBlockHashes;
 
-CAmount GetMasternodeCollateral()
+CAmount GetMasternodeCollateral(int nHeight)
 {
-    if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Height >= 308000 && chainActive.Height < 351000) {
+    if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && nHeight >= 308000 && nHeight < 351000) {
         return Params().MasternodeCollateralAmtNew();
-    }else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && chainActive.Height() >= 351000) {
+    }else if (IsSporkActive(SPORK_26_NEW_COLLATERAL) && nHeight >= 351000) {
          return Params().MasternodeCollateralAmtEnd();
     }else{
          return Params().MasternodeCollateralAmt();
